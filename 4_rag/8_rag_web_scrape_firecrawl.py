@@ -11,7 +11,7 @@ load_dotenv()
 
 # Define the persistent directory
 current_dir = os.path.dirname(os.path.abspath(__file__))
-db_dir = os.path.join(current_dir, "db")
+db_dir      = os.path.join(current_dir, "db")
 persistent_directory = os.path.join(db_dir, "chroma_db_firecrawl")
 
 
@@ -25,7 +25,7 @@ def create_vector_store():
     # Step 1: Crawl the website using FireCrawlLoader
     print("Begin crawling the website...")
     loader = FireCrawlLoader(
-        api_key=api_key, url="https://apple.com", mode="scrape")
+        api_key = api_key, url = "https://apple.com", mode = "scrape")
     docs = loader.load()
     print("Finished crawling the website.")
 
@@ -37,7 +37,7 @@ def create_vector_store():
 
     # Step 2: Split the crawled content into chunks
     text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
-    split_docs = text_splitter.split_documents(docs)
+    split_docs    = text_splitter.split_documents(docs)
 
     # Display information about the split documents
     print("\n--- Document Chunks Information ---")
@@ -45,12 +45,12 @@ def create_vector_store():
     print(f"Sample chunk:\n{split_docs[0].page_content}\n")
 
     # Step 3: Create embeddings for the document chunks
-    embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+    embeddings = OpenAIEmbeddings(model = "text-embedding-3-small")
 
     # Step 4: Create and persist the vector store with the embeddings
     print(f"\n--- Creating vector store in {persistent_directory} ---")
     db = Chroma.from_documents(
-        split_docs, embeddings, persist_directory=persistent_directory
+        split_docs, embeddings, persist_directory = persistent_directory
     )
     print(f"--- Finished creating vector store in {persistent_directory} ---")
 
@@ -63,9 +63,9 @@ else:
         f"Vector store {persistent_directory} already exists. No need to initialize.")
 
 # Load the vector store with the embeddings
-embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
-db = Chroma(persist_directory=persistent_directory,
-            embedding_function=embeddings)
+embeddings = OpenAIEmbeddings(model = "text-embedding-3-small")
+db = Chroma(persist_directory  = persistent_directory,
+            embedding_function = embeddings)
 
 
 # Step 5: Query the vector store

@@ -23,10 +23,10 @@ def get_current_time(*args, **kwargs):
 # List of tools available to the agent
 tools = [
     Tool(
-        name="Time",  # Name of the tool
-        func=get_current_time,  # Function that the tool will execute
+        name = "Time",  # Name of the tool
+        func = get_current_time,  # Function that the tool will execute
         # Description of the tool
-        description="Useful for when you need to know the current time",
+        description = "Useful for when you need to know the current time",
     ),
 ]
 
@@ -37,22 +37,22 @@ prompt = hub.pull("hwchase17/react")
 
 # Initialize a ChatOpenAI model
 llm = ChatOpenAI(
-    model="gpt-4o", temperature=0
+    model = "gpt-4o-mini", temperature = 0
 )
 
 # Create the ReAct agent using the create_react_agent function
 agent = create_react_agent(
-    llm=llm,
-    tools=tools,
-    prompt=prompt,
-    stop_sequence=True,
+    llm           = llm,
+    tools         = tools,
+    prompt        = prompt,
+    stop_sequence = True,
 )
 
 # Create an agent executor from the agent and tools
 agent_executor = AgentExecutor.from_agent_and_tools(
-    agent=agent,
-    tools=tools,
-    verbose=True,
+    agent   = agent,
+    tools   = tools,
+    verbose = True,
 )
 
 # Run the agent with a test query

@@ -11,7 +11,7 @@ load_dotenv()
 
 # Define the persistent directory
 current_dir = os.path.dirname(os.path.abspath(__file__))
-db_dir = os.path.join(current_dir, "db")
+db_dir      = os.path.join(current_dir, "db")
 persistent_directory = os.path.join(db_dir, "chroma_db_apple")
 
 # Step 1: Scrape the content from apple.com using WebBaseLoader
@@ -19,13 +19,13 @@ persistent_directory = os.path.join(db_dir, "chroma_db_apple")
 urls = ["https://www.apple.com/"]
 
 # Create a loader for web content
-loader = WebBaseLoader(urls)
+loader    = WebBaseLoader(urls)
 documents = loader.load()
 
 # Step 2: Split the scraped content into chunks
 # CharacterTextSplitter splits the text into smaller chunks
 text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
-docs = text_splitter.split_documents(documents)
+docs          = text_splitter.split_documents(documents)
 
 # Display information about the split documents
 print("\n--- Document Chunks Information ---")
@@ -34,7 +34,7 @@ print(f"Sample chunk:\n{docs[0].page_content}\n")
 
 # Step 3: Create embeddings for the document chunks
 # OpenAIEmbeddings turns text into numerical vectors that capture semantic meaning
-embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+embeddings = OpenAIEmbeddings(model = "text-embedding-3-small")
 
 # Step 4: Create and persist the vector store with the embeddings
 # Chroma stores the embeddings for efficient searching
@@ -49,8 +49,8 @@ else:
 # Step 5: Query the vector store
 # Create a retriever for querying the vector store
 retriever = db.as_retriever(
-    search_type="similarity",
-    search_kwargs={"k": 3},
+    search_type   = "similarity",
+    search_kwargs = {"k": 3},
 )
 
 # Define the user's question

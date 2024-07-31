@@ -9,25 +9,25 @@ from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 load_dotenv()
 
 # Define the persistent directory
-current_dir = os.path.dirname(os.path.abspath(__file__))
+current_dir          = os.path.dirname(os.path.abspath(__file__))
 persistent_directory = os.path.join(
     current_dir, "db", "chroma_db_with_metadata")
 
 # Define the embedding model
-embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+embeddings = OpenAIEmbeddings(model = "text-embedding-3-small")
 
 # Load the existing vector store with the embedding function
-db = Chroma(persist_directory=persistent_directory,
-            embedding_function=embeddings)
+db = Chroma(persist_directory  = persistent_directory,
+            embedding_function = embeddings)
 
 # Define the user's question
 query = "How can I learn more about LangChain?"
 
 # Retrieve relevant documents based on the query
 retriever = db.as_retriever(
-    search_type="similarity",
-    search_kwargs={"k": 1},
-)
+    search_type   = "similarity",
+    search_kwargs = {"k": 1}  # 1k tokens = 1000 tokens?
+    )
 relevant_docs = retriever.invoke(query)
 
 # Display the relevant results with metadata
@@ -45,7 +45,7 @@ combined_input = (
 )
 
 # Create a ChatOpenAI model
-model = ChatOpenAI(model="gpt-4o")
+model = ChatOpenAI(model = "gpt-4o-mini")
 
 # Define the messages for the model
 messages = [

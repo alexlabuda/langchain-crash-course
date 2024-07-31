@@ -12,25 +12,25 @@ from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 load_dotenv()
 
 # Define the persistent directory
-current_dir = os.path.dirname(os.path.abspath(__file__))
+current_dir          = os.path.dirname(os.path.abspath(__file__))
 persistent_directory = os.path.join(current_dir, "db", "chroma_db_with_metadata")
 
 # Define the embedding model
-embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+embeddings = OpenAIEmbeddings(model = "text-embedding-3-small")
 
 # Load the existing vector store with the embedding function
-db = Chroma(persist_directory=persistent_directory, embedding_function=embeddings)
+db = Chroma(persist_directory = persistent_directory, embedding_function = embeddings)
 
 # Create a retriever for querying the vector store
 # `search_type` specifies the type of search (e.g., similarity)
 # `search_kwargs` contains additional arguments for the search (e.g., number of results to return)
 retriever = db.as_retriever(
-    search_type="similarity",
-    search_kwargs={"k": 3},
+    search_type   ="similarity",
+    search_kwargs = {"k": 3},
 )
 
 # Create a ChatOpenAI model
-llm = ChatOpenAI(model="gpt-4o")
+llm = ChatOpenAI(model = "gpt-4o-mini")
 
 # Contextualize question prompt
 # This system prompt helps the AI understand that it should reformulate the question
@@ -101,8 +101,8 @@ def continual_chat():
         # Display the AI's response
         print(f"AI: {result['answer']}")
         # Update the chat history
-        chat_history.append(HumanMessage(content=query))
-        chat_history.append(SystemMessage(content=result["answer"]))
+        chat_history.append(HumanMessage(content  = query))
+        chat_history.append(SystemMessage(content = result["answer"]))
 
 
 # Main function to start the continual chat

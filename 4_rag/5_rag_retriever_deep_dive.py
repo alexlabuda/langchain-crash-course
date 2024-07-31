@@ -8,15 +8,15 @@ load_dotenv()
 
 # Define the persistent directory
 current_dir = os.path.dirname(os.path.abspath(__file__))
-db_dir = os.path.join(current_dir, "db")
+db_dir      = os.path.join(current_dir, "db")
 persistent_directory = os.path.join(db_dir, "chroma_db_with_metadata")
 
 # Define the embedding model
-embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+embeddings = OpenAIEmbeddings(model = "text-embedding-3-small")
 
 # Load the existing vector store with the embedding function
-db = Chroma(persist_directory=persistent_directory,
-            embedding_function=embeddings)
+db = Chroma(persist_directory  = persistent_directory,
+            embedding_function = embeddings)
 
 
 # Function to query a vector store with different search types and parameters
@@ -26,12 +26,12 @@ def query_vector_store(
     if os.path.exists(persistent_directory):
         print(f"\n--- Querying the Vector Store {store_name} ---")
         db = Chroma(
-            persist_directory=persistent_directory,
-            embedding_function=embedding_function,
+            persist_directory  = persistent_directory,
+            embedding_function = embedding_function,
         )
         retriever = db.as_retriever(
-            search_type=search_type,
-            search_kwargs=search_kwargs,
+            search_type   = search_type,
+            search_kwargs = search_kwargs,
         )
         relevant_docs = retriever.invoke(query)
         # Display the relevant results with metadata
@@ -54,8 +54,13 @@ query = "How did Juliet die?"
 # It finds the most similar documents to the query vector based on cosine similarity.
 # Use this when you want to retrieve the top k most similar documents.
 print("\n--- Using Similarity Search ---")
-query_vector_store("chroma_db_with_metadata", query,
-                   embeddings, "similarity", {"k": 3})
+query_vector_store(
+    "chroma_db_with_metadata", 
+    query,
+    embeddings, 
+    "similarity", 
+    {"k": 3}
+    )
 
 # 2. Max Marginal Relevance (MMR)
 # This method balances between selecting documents that are relevant to the query and diverse among themselves.
@@ -71,8 +76,8 @@ query_vector_store(
     query,
     embeddings,
     "mmr",
-    {"k": 3, "fetch_k": 20, "lambda_mult": 0.5},
-)
+    {"k": 3, "fetch_k": 20, "lambda_mult": 0.5}
+    )
 
 # 3. Similarity Score Threshold
 # This method retrieves documents that exceed a certain similarity score threshold.
@@ -84,7 +89,7 @@ query_vector_store(
     query,
     embeddings,
     "similarity_score_threshold",
-    {"k": 3, "score_threshold": 0.1},
-)
+    {"k": 3, "score_threshold": 0.1}
+    )
 
 print("Querying demonstrations with different search types completed.")
