@@ -16,36 +16,36 @@ load_dotenv()
 
 # Load the existing Chroma vector store
 current_dir = os.path.dirname(os.path.abspath(__file__))
-db_dir = os.path.join(current_dir, "..", "..", "4_rag", "db")
+db_dir      = os.path.join(current_dir, "..", "..", "4_rag", "db")
 persistent_directory = os.path.join(db_dir, "chroma_db_with_metadata")
 
 # Check if the Chroma vector store already exists
 if os.path.exists(persistent_directory):
     print("Loading existing vector store...")
-    db = Chroma(persist_directory=persistent_directory,
-                embedding_function=None)
+    db = Chroma(persist_directory  = persistent_directory,
+                embedding_function = None)
 else:
     raise FileNotFoundError(
         f"The directory {persistent_directory} does not exist. Please check the path."
     )
 
 # Define the embedding model
-embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+embeddings = OpenAIEmbeddings(model = "text-embedding-3-small")
 
 # Load the existing vector store with the embedding function
-db = Chroma(persist_directory=persistent_directory,
-            embedding_function=embeddings)
+db = Chroma(persist_directory  = persistent_directory,
+            embedding_function = embeddings)
 
 # Create a retriever for querying the vector store
 # `search_type` specifies the type of search (e.g., similarity)
 # `search_kwargs` contains additional arguments for the search (e.g., number of results to return)
 retriever = db.as_retriever(
-    search_type="similarity",
-    search_kwargs={"k": 3},
+    search_type   = "similarity",
+    search_kwargs = {"k": 3},
 )
 
 # Create a ChatOpenAI model
-llm = ChatOpenAI(model="gpt-4o")
+llm = ChatOpenAI(model="gpt-4o-mini")
 
 # Contextualize question prompt
 # This system prompt helps the AI understand that it should reformulate the question
@@ -101,7 +101,8 @@ question_answer_chain = create_stuff_documents_chain(llm, qa_prompt)
 
 # Create a retrieval chain that combines the history-aware retriever and the question answering chain
 rag_chain = create_retrieval_chain(
-    history_aware_retriever, question_answer_chain)
+    history_aware_retriever, question_answer_chain
+    )
 
 
 # Set Up ReAct Agent with Document Store Retriever
@@ -110,23 +111,23 @@ react_docstore_prompt = hub.pull("hwchase17/react")
 
 tools = [
     Tool(
-        name="Answer Question",
-        func=lambda input, **kwargs: rag_chain.invoke(
+        name = "Answer Question",
+        func = lambda input, **kwargs: rag_chain.invoke(
             {"input": input, "chat_history": kwargs.get("chat_history", [])}
         ),
-        description="useful for when you need to answer questions about the context",
+        description = "useful for when you need to answer questions about the context",
     )
 ]
 
 # Create the ReAct Agent with document store retriever
 agent = create_react_agent(
-    llm=llm,
-    tools=tools,
-    prompt=react_docstore_prompt,
+    llm    = llm,
+    tools  = tools,
+    prompt = react_docstore_prompt,
 )
 
 agent_executor = AgentExecutor.from_agent_and_tools(
-    agent=agent, tools=tools, handle_parsing_errors=True, verbose=True,
+    agent = agent, tools = tools, handle_parsing_errors = True, verbose = True,
 )
 
 chat_history = []
@@ -139,5 +140,5 @@ while True:
     print(f"AI: {response['output']}")
 
     # Update history
-    chat_history.append(HumanMessage(content=query))
-    chat_history.append(AIMessage(content=response["output"]))
+    chat_history.append(HumanMessage(content = query))
+    chat_history.append(AIMessage(content = response["output"]))
